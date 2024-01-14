@@ -132,7 +132,7 @@ services:
       - ${INTERNAL_PORT_DB}:${EXTERNAL_PORT_DB}
 
   kafka:
-    image: wurstmeister/kafka:2.2-2.5.
+    image: wurstmeister/kafka:latest
     ports:
       - "9092:9092"
     # Configura otras propiedades de Kafka según sea necesario
