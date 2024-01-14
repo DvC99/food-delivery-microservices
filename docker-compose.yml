@@ -1,37 +1,138 @@
 version: '3.8'
 services:
-  orders:
-    build: ./orders-service
+  client:
+    build: ./client-service
+    ports:
+      - ${INTERNAL_PORT_CLIENT_SERVICE}:${EXTERNAL_PORT_CLIENT_SERVICE}
     depends_on:
-      - kafka
-    # Agrega otras configuraciones según sea necesario
-
-  restaurants:
-    build: ./restaurants-service
-    depends_on:
-      - kafka
-    # Agrega otras configuraciones según sea necesario
+      kafka:
+        condition: service_started
+      postgresDB:
+        condition: service_started
+    env_file: ./.env
+    environment:
+      INTERNAL_PORT_CLIENT_SERVICE: ${INTERNAL_PORT_CLIENT_SERVICE}
+      EXTERNAL_PORT_CLIENT_SERVICE: ${EXTERNAL_PORT_CLIENT_SERVICE}
+      INTERNAL_PORT_DB: ${INTERNAL_PORT_DB}
+      EXTERNAL_PORT_DB: ${EXTERNAL_PORT_DB}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
 
   delivery:
     build: ./delivery-service
+    ports:
+      - ${INTERNAL_PORT_DELIVERY_SERVICE}:${EXTERNAL_PORT_DELIVERY_SERVICE}
     depends_on:
-      - kafka
-    # Agrega otras configuraciones según sea necesario
+      kafka:
+        condition: service_started
+      postgresDB:
+        condition: service_started
+    env_file: ./.env
+    environment:
+      INTERNAL_PORT_DELIVERY_SERVICE: INTERNAL_PORT_DELIVERY_SERVICE
+      EXTERNAL_PORT_DELIVERY_SERVICE: ${EXTERNAL_PORT_DELIVERY_SERVICE}
+      INTERNAL_PORT_DB: ${INTERNAL_PORT_DB}
+      EXTERNAL_PORT_DB: ${EXTERNAL_PORT_DB}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
 
-  payments:
-    build: ./payments-service
-    depends_on:
-      - kafka
-    # Agrega otras configuraciones según sea necesario
-
-  notifications:
+  notification:
     build: ./notifications-service
+    ports:
+      - ${INTERNAL_PORT_NOTIFICATION_SERVICE}:${EXTERNAL_PORT_NOTIFICATION_SERVICE}
     depends_on:
-      - kafka
-    # Agrega otras configuraciones según sea necesario
+      kafka:
+        condition: service_started
+      postgresDB:
+        condition: service_started
+    env_file: ./.env
+    environment:
+      INTERNAL_PORT_NOTIFICATION_SERVICE: ${INTERNAL_PORT_NOTIFICATION_SERVICE}
+      EXTERNAL_PORT_NOTIFICATION_SERVICE: ${EXTERNAL_PORT_NOTIFICATION_SERVICE}
+      INTERNAL_PORT_DB: ${INTERNAL_PORT_DB}
+      EXTERNAL_PORT_DB: ${EXTERNAL_PORT_DB}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+
+  order:
+    build: ./orders-service
+    ports:
+      - ${INTERNAL_PORT_ORDES_SERVICE}:${EXTERNAL_PORT_ORDES_SERVICE}
+    depends_on:
+      kafka:
+        condition: service_started
+      postgresDB:
+        condition: service_started
+    env_file: ./.env
+    environment:
+      INTERNAL_PORT_ORDES_SERVICE: ${INTERNAL_PORT_ORDES_SERVICE}
+      EXTERNAL_PORT_ORDES_SERVICE: ${EXTERNAL_PORT_ORDES_SERVICE}
+      INTERNAL_PORT_DB: ${INTERNAL_PORT_DB}
+      EXTERNAL_PORT_DB: ${EXTERNAL_PORT_DB}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+
+  payment:
+    build: ./payments-service
+    ports:
+      - ${INTERNAL_PORT_PAYMENTS_SERVICE}:${EXTERNAL_PORT_PAYMENTS_SERVICE}
+    depends_on:
+      kafka:
+        condition: service_started
+      postgresDB:
+        condition: service_started
+    env_file: ./.env
+    environment:
+      INTERNAL_PORT_PAYMENTS_SERVICE: ${INTERNAL_PORT_PAYMENTS_SERVICE}
+      EXTERNAL_PORT_PAYMENTS_SERVICE: EXTERNAL_PORT_PAYMENTS_SERVICE
+      INTERNAL_PORT_DB: ${INTERNAL_PORT_DB}
+      EXTERNAL_PORT_DB: ${EXTERNAL_PORT_DB}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+
+  restaurant:
+    build: ./restaurants-service
+    ports:
+      - ${INTERNAL_PORT_RESTAURANT_SERVICE}:${EXTERNAL_PORT_RESTAURANT_SERVICE}
+    depends_on:
+      kafka:
+        condition: service_started
+      postgresDB:
+        condition: service_started
+    env_file: ./.env
+    environment:
+      INTERNAL_PORT_RESTAURANT_SERVICE: ${INTERNAL_PORT_RESTAURANT_SERVICE}
+      EXTERNAL_PORT_RESTAURANT_SERVICE: ${EXTERNAL_PORT_RESTAURANT_SERVICE}
+      INTERNAL_PORT_DB: ${INTERNAL_PORT_DB}
+      EXTERNAL_PORT_DB: ${EXTERNAL_PORT_DB}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+
+  postgresDB:
+    image: postgres:latest
+    env_file: ./.env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_HOST: ${DB_HOST}
+    ports:
+      - ${INTERNAL_PORT_DB}:${EXTERNAL_PORT_DB}
 
   kafka:
-    image: wurstmeister/kafka:2.12-2.5.1
+    image: wurstmeister/kafka:2.2-2.5.
     ports:
       - "9092:9092"
     # Configura otras propiedades de Kafka según sea necesario
