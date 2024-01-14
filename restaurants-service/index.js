@@ -6,7 +6,7 @@ import routes from './app/routes/index.js';
 import dbConnect from "./config/posgress.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.INTERNAL_PORT_RESTAURANT_SERVICE || 3000;
 
 app.use(cors());
 app.use(json());
