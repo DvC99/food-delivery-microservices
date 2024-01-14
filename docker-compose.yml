@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  orders:
+    build: ./orders-service
+    depends_on:
+      - kafka
+    # Agrega otras configuraciones según sea necesario
+
+  restaurants:
+    build: ./restaurants-service
+    depends_on:
+      - kafka
+    # Agrega otras configuraciones según sea necesario
+
+  delivery:
+    build: ./delivery-service
+    depends_on:
+      - kafka
+    # Agrega otras configuraciones según sea necesario
+
+  payments:
+    build: ./payments-service
+    depends_on:
+      - kafka
+    # Agrega otras configuraciones según sea necesario
+
+  notifications:
+    build: ./notifications-service
+    depends_on:
+      - kafka
+    # Agrega otras configuraciones según sea necesario
+
+  kafka:
+    image: wurstmeister/kafka:2.12-2.5.1
+    ports:
+      - "9092:9092"
+    # Configura otras propiedades de Kafka según sea necesario
